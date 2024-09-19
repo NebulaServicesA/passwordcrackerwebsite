@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Estimator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        input[type="password"] {
+            padding: 15px;
+            width: 100%;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="password"]:focus {
+            border-color: #007BFF;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .result strong {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Password Strength Estimator</h1>
+        <p>Enter your password to estimate how long it would take to crack it.</p>
+        <input type="password" id="passwordInput" placeholder="Enter your password" oninput="estimateTime()">
+        <div class="result" id="result"></div>
+        <div class="footer">
+            <p>This is an estimation tool. Use a strong password for better security.</p>
+        </div>
+    </div>
+
+    <script>
+        function estimateTime() {
+            const password = document.getElementById('passwordInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (password.length === 0) {
+                resultDiv.innerHTML = '';
+                return;
+            }
+
+            const charSetSize = calculateCharSetSize(password);
+            const totalCombinations = Math.pow(charSetSize, password.length);
+
+            // Distributed attack speed (100 trillion guesses per second)
+            const guessesDistributed = 1e14;
+            const timeDistributed = totalCombinations / guessesDistributed;
+
+            const timeDistributedString = convertTime(timeDistributed);
+
+            // Display the result
+            resultDiv.innerHTML = `
+                Estimated time to crack: <strong>${timeDistributedString}</strong>
+            `;
+        }
+
+        function calculateCharSetSize(password) {
+            let size = 0;
+            if (/[a-z]/.test(password)) size += 26; // lowercase
+            if (/[A-Z]/.test(password)) size += 26; // uppercase
+            if (/\d/.test(password)) size += 10; // digits
+            if (/[\W_]/.test(password)) size += 33; // special characters
+            return size;
+        }
+
+        function convertTime(seconds) {
+            const years = Math.floor(seconds / (3600 * 24 * 365));
+            const days = Math.floor((seconds % (3600 * 24 * 365)) / (3600 * 24));
+            const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+
+            if (years > 0) {
+                return `${years} years, ${days} days`;
+            } else if (days > 0) {
+                return `${days} days, ${hours} hours`;
+            } else if (hours > 0) {
+                return `${hours} hours, ${minutes} minutes`;
+            } else if (minutes > 0) {
+                return `${minutes} minutes, ${secs} seconds`;
+            } else {
+                return `${secs} seconds`;
+            }
+        }
+    </script>
+
+</body>
+</html>
