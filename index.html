@@ -70,6 +70,26 @@
             font-size: 14px;
             color: #888;
         }
+
+        .button-container {
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -81,6 +101,9 @@
         <div class="result" id="result"></div>
         <div class="footer">
             <p>This is an estimation tool. Use a strong password for better security.</p>
+        </div>
+        <div class="button-container">
+            <button class="btn" onclick="window.location.href='recommended-passwords.html'">Recommended Passwords</button>
         </div>
     </div>
 
